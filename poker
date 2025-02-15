@@ -1,0 +1,227 @@
+let players = [];
+
+   function addPlayer() {
+       const playerNameInput = document.getElementById('player-name');
+       const initialAmountInput = document.getElementById('initial-amount');
+       const playerName = playerNameInput.value.trim();
+       const initialAmount = parseFloat(initialAmountInput.value.trim()) || 0;
+
+       if (playerName !== "" && initialAmount > 0) {
+           players.push({ name: playerName, initialAmount: initialAmount, gain: 0, loss: 0, tempGain: 0, tempLoss: 0, totalAmount: initialAmount });
+           playerNameInput.value = "";
+           initialAmountInput.value = "";
+           renderPlayers();
+       }
+   }
+
+   function renderPlayers() {
+       const playersDiv = document.getElementById('players');
+       playersDiv.innerHTML = '';
+       players.forEach((player, index) => {
+           const playerDiv = document.createElement('div');
+           playerDiv.className = 'player';
+           playerDiv.innerHTML = `
+               <span>${player.name}</span>
+               <input type="number" placeholder="گرفتن" onchange="updateTempGain(${index}, this.value)">
+               <input type="number" placeholder="از دست دادن" onchange="updateTempLoss(${index}, this.value)">
+               <span class="total-amount">${player.totalAmount}</span>
+           `;
+           playersDiv.appendChild(playerDiv);
+       });
+   }
+
+   function updateTempGain(index, value) {
+       players[index].tempGain = parseFloat(value) || 0;
+   }
+
+   function updateTempLoss(index, value) {
+       players[index].tempLoss = parseFloat(value) || 0;
+   }
+
+   function updateTotalAmount(index) {
+       players[index].totalAmount = players[index].initialAmount + players[index].gain - players[index].loss;
+   }
+
+   function calculateResults() {
+       let results = '';
+       players.forEach((player, index) => {
+           player.gain = player.tempGain;
+           player.loss = player.tempLoss;
+           updateTotalAmount(index);
+           const net = player.gain - player.loss;
+           results += `${player.name}: ${net > 0 ? 'برد' : 'باخت'} ${Math.abs(net)}\n`;
+       });
+       renderPlayers();
+       alert(results);
+   }// script.js
+   let players = [];
+
+   function addPlayer() {
+       const playerNameInput = document.getElementById('player-name');
+       const initialAmountInput = document.getElementById('initial-amount');
+       const playerName = playerNameInput.value.trim();
+       const initialAmount = parseFloat(initialAmountInput.value.trim()) || 0;
+
+       if (playerName !== "" && initialAmount > 0) {
+           players.push({ name: playerName, initialAmount: initialAmount, gain: 0, loss: 0, totalAmount: initialAmount });
+           playerNameInput.value = "";
+           initialAmountInput.value = "";
+           renderPlayers();
+       }
+   }
+
+   function renderPlayers() {
+       const playersDiv = document.getElementById('players');
+       playersDiv.innerHTML = '';
+       players.forEach((player, index) => {
+           const playerDiv = document.createElement('div');
+           playerDiv.className = 'player';
+           playerDiv.innerHTML = `
+               <span>${player.name}</span>
+               <input type="number" placeholder="گرفتن" onchange="updateGain(${index}, this.value)">
+               <input type="number" placeholder="از دست دادن" onchange="updateLoss(${index}, this.value)">
+               <span class="total-amount">${player.totalAmount}</span>
+           `;
+           playersDiv.appendChild(playerDiv);
+       });
+   }
+
+   function updateGain(index, value) {
+       players[index].gain = parseFloat(value) || 0;
+       updateTotalAmount(index);
+   }
+
+   function updateLoss(index, value) {
+       players[index].loss = parseFloat(value) || 0;
+       updateTotalAmount(index);
+   }
+
+   function updateTotalAmount(index) {
+       players[index].totalAmount = players[index].initialAmount + players[index].gain - players[index].loss;
+       renderPlayers();
+   }
+
+   function calculateResults() {
+       let results = '';
+       players.forEach(player => {
+           const net = player.gain - player.loss;
+           results += `${player.name}: ${net > 0 ? 'برد' : 'باخت'} ${Math.abs(net)}\n`;
+       });
+       alert(results);
+   }/* styles.css */
+   body {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       height: 100vh;
+       background: linear-gradient(135deg, #6d5eac, #8e44ad);
+       font-family: 'Arial', sans-serif;
+       margin: 0;
+       padding: 0;
+   }
+
+   #container {
+       background-color: rgba(255, 255, 255, 0.9);
+       padding: 20px;
+       border-radius: 15px;
+       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+       width: 350px;
+       text-align: center;
+   }
+
+   h1 {
+       color: #333;
+       font-size: 24px;
+       margin-bottom: 20px;
+   }
+
+   #player-form {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+       margin-bottom: 20px;
+   }
+
+   #player-form input {
+       width: calc(100% - 22px);
+       margin-bottom: 10px;
+       padding: 10px;
+       border: 1px solid #ccc;
+       border-radius: 5px;
+       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+       font-size: 16px;
+   }
+
+   #player-form button {
+       width: 100%;
+       padding: 10px;
+       background-color: #8e44ad;
+       color: #fff;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+       font-size: 16px;
+   }
+
+   #player-form button:hover {
+       background-color: #732d91;
+   }
+
+   .player {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-bottom: 10px;
+       background-color: #fff;
+       border-radius: 5px;
+       padding: 10px;
+       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+   }
+
+   .player input {
+       width: 60px;
+       padding: 5px;
+       border: 1px solid #ccc;
+       border-radius: 5px;
+       font-size: 14px;
+   }
+
+   .player span {
+       flex-grow: 1;
+       text-align: center;
+       font-size: 16px;
+   }
+
+   .player .total-amount {
+       margin-left: 10px;
+       font-size: 16px;
+       color: #333;
+   }
+
+   button {
+       width: 100%;
+       padding: 10px;
+       background-color: #8e44ad;
+       color: #fff;
+       border: none;
+       border-radius: 5px;
+       cursor: pointer;
+       font-size: 16px;
+   }
+
+   button:hover {
+       background-color: #732d91;
+   }
+
+   .footer {
+       margin-top: 20px;
+       font-size: 16px;
+       color: #8e44ad;
+       font-family: 'Courier New', Courier, monospace;
+       animation: fadeIn 3s infinite alternate;
+   }
+
+   @keyframes fadeIn {
+       from { opacity: 0; }
+       to { opacity: 1; }
+   }
